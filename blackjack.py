@@ -97,6 +97,15 @@ def pfunds_func():
     player_funds -= Player.bet
     print(f"you have ${player_funds} remaining")
 
+def ace_check():
+    if player_card_list[-1].value == 11:
+        player_card_list[-1].value = int(input("Please choose 11 or 1 for your Ace:  "))
+        player_value.append(player_card_list[-1].value)
+        player_card_names.append(player_card_list[-1])
+    else:
+        player_value.append(player_card_list[-1].value)
+        player_card_names.append(player_card_list[-1])
+
 player_value = []
 dealer_value = []
 
@@ -123,8 +132,8 @@ def player_addvalue_func():
         player_card_names.append(player_card_list[0])
         player_card_names.append(player_card_list[1])
     else:
-        player_value.append(player_card_list[-1].value)
-        player_card_names.append(player_card_list[-1])
+        ace_check()
+        
 
 def dealer_addvalue_func():
     global dealer_value
