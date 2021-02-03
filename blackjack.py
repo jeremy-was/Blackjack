@@ -106,6 +106,19 @@ def ace_check():
         player_value.append(player_card_list[-1].value)
         player_card_names.append(player_card_list[-1])
 
+def two_ace_check():
+    if player_card_list[0].value == 11 and player_card_list[1].value == 11:
+        player_card_list[0].value = 1
+        player_value.append(player_card_list[0].value)
+        player_value.append(player_card_list[1].value)
+        player_card_names.append(player_card_list[0])
+        player_card_names.append(player_card_list[1])
+    else:
+        player_value.append(player_card_list[0].value)
+        player_value.append(player_card_list[1].value)
+        player_card_names.append(player_card_list[0])
+        player_card_names.append(player_card_list[1])
+
 player_value = []
 dealer_value = []
 
@@ -127,10 +140,7 @@ def player_addvalue_func():
     
     # if len(player_value) == 2: (looks like this was an error)
     if len(player_card_list) == 2:
-        player_value.append(player_card_list[0].value)
-        player_value.append(player_card_list[1].value)
-        player_card_names.append(player_card_list[0])
-        player_card_names.append(player_card_list[1])
+        two_ace_check()
     else:
         ace_check()
         
