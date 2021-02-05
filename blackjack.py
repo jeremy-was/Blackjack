@@ -221,15 +221,6 @@ def gameon_dealer_func():
     print(sum(dealer_value))
     print("* * * * * * *")
 
-# Functions for (two cards each) - to the dealer and to the player
-def dealer_two_card_deal():
-    dealer_card_list.append(whole_deck.deal_one())
-    dealer_card_list.append(whole_deck.deal_another())
-
-def player_two_card_deal():
-    player_card_list.append(whole_deck.deal_one())
-    player_card_list.append(whole_deck.deal_another())
-
 def gameon_dealer_finish_func():
     global dealer_value
 
@@ -338,11 +329,46 @@ def end_of_game():
 
 # All Subsequent deals of ONE card to the DEALER
 def dealer_one_card_deal():
-    dealer_card_list.append(whole_deck.deal_one())
+    global whole_deck
+    if not whole_deck.all_cards:
+        print("\n***************************")
+        print("    Deck empty")
+        print("***************************")
+        print("    Adding a new deck")
+        print("***************************")
+        print("    Shuffling new deck")
+        print("***************************\n")
+        whole_deck = Deck()
+        random.shuffle(whole_deck.all_cards)
+        dealer_card_list.append(whole_deck.deal_one())
+    else:
+        dealer_card_list.append(whole_deck.deal_one())
 
 # All Subsequent deals of ONE card to the PLAYER
 def player_one_card_deal():
+    global whole_deck
+    if not whole_deck.all_cards:
+        print("\n***************************")
+        print("    Deck empty")
+        print("***************************")
+        print("    Adding a new deck")
+        print("***************************")
+        print("    Shuffling new deck")
+        print("***************************\n")
+        whole_deck = Deck()
+        random.shuffle(whole_deck.all_cards)
+        player_card_list.append(whole_deck.deal_one())
+    else:
+        player_card_list.append(whole_deck.deal_one())
+
+# Functions for (two cards each) - to the dealer and to the player
+def dealer_two_card_deal():
+    dealer_card_list.append(whole_deck.deal_one())
+    dealer_card_list.append(whole_deck.deal_another())
+
+def player_two_card_deal():
     player_card_list.append(whole_deck.deal_one())
+    player_card_list.append(whole_deck.deal_another())
 
 def play_again_check():
     while True:
@@ -365,7 +391,7 @@ def repeat_game():
     dealer_value.clear()
     whole_deck = Deck()
     random.shuffle(whole_deck.all_cards)
-    for j in whole_deck.all_cards: original_shuffle.append(j)
+    #for j in whole_deck.all_cards: original_shuffle.append(j)
 
     #currentplayer = Player()
     print("**************** NEW GAME **************** NEW GAME ****************")
