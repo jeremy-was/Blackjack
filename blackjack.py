@@ -205,7 +205,7 @@ def gameon_player_func():
             gameon_dealer_finish_func()
         else:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
-            print(f"{currentplayer} has 21!!")
+            print(f"{currentplayer} has 21")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
@@ -263,7 +263,7 @@ def gameon_dealer_finish_func():
             gameon = False
             end_of_game()
             break
-        elif player_value[0] == 11 and player_value[1] == 10 or player_value[1] == 11 and player_value[0] == 10:
+        elif dealer_value[0] == 11 and dealer_value[1] == 10 or dealer_value[1] == 11 and dealer_value[0] == 10:
             print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
             print(f"Dealer has Black Jack!")
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
@@ -271,7 +271,7 @@ def gameon_dealer_finish_func():
             end_of_game()
         else:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
-            print("Dealer has 21!")
+            print("Dealer has 21")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             end_of_game()
@@ -315,7 +315,6 @@ def end_of_game():
         print(f"\n{currentplayer} is the winner and dealer went bust")
         print(f"\n{currentplayer} won ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-
     elif sum(dealer_value) < sum(player_value) and sum(player_value) == 21:
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds += Player.bet*10
