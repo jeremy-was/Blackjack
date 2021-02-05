@@ -78,6 +78,7 @@ def bet_func():
         try:
             if player_funds <=0:
                 print('No money left, playing just for fun now')
+                Player.bet = 0
                 break
             if player_funds > 0:
                 Player.bet = int(input(f"You have ${player_funds} remining, how much you betting?:   "))
@@ -196,9 +197,15 @@ def gameon_player_func():
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
+        elif player_value[0] == 11 and player_value[1] == 10 or player_value[1] == 11 and player_value[0] == 10:
+            print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
+            print(f"{currentplayer} has Black Jack!")
+            print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
+            gameon = False
+            gameon_dealer_finish_func()
         else:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
-            print(f"{currentplayer} has Black Jack!!")
+            print(f"{currentplayer} has 21!!")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
@@ -256,10 +263,15 @@ def gameon_dealer_finish_func():
             gameon = False
             end_of_game()
             break
-
+        elif player_value[0] == 11 and player_value[1] == 10 or player_value[1] == 11 and player_value[0] == 10:
+            print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
+            print(f"Dealer has Black Jack!")
+            print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
+            gameon = False
+            end_of_game()
         else:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
-            print("Dealer has Black Jack!")
+            print("Dealer has 21!")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             end_of_game()
@@ -271,37 +283,51 @@ def end_of_game():
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         print(f"\nIt's a draw! {currentplayer} still has ${player_funds} remaining\n")
         play_again_check()
-    if sum(dealer_value) == sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
+    elif sum(dealer_value) == sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds -= Player.bet
-        print(f"\nYou both went bust! with the same score {currentplayer} lost ${Player.bet}! and now has ${player_funds} remaining\n")
+        print(f"\nYou both went bust! with the same score {currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    if sum(dealer_value) != sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
+    elif sum(dealer_value) != sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds -= Player.bet
-        print(f"\nYou both went bust! {currentplayer} lost ${Player.bet}! and now has ${player_funds} remaining\n")
+        print(f"\nYou both went bust! {currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    if sum(dealer_value) > sum(player_value) and sum(dealer_value) <= 21:
+    elif sum(dealer_value) > sum(player_value) and sum(dealer_value) <= 21:
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds -= Player.bet
-        print(f"Dealer won! {currentplayer} lost ${Player.bet}! and now has ${player_funds} remaining")
+        print(f"Dealer won! {currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    if sum(dealer_value) < sum(player_value) and sum(player_value) <= 21:
+    elif sum(dealer_value) < sum(player_value) and sum(player_value) <= 20:
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds += Player.bet
-        print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet}! and now has ${player_funds} remaining")
+        print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    if sum(dealer_value) <=21 and sum(player_value) >21: 
+    elif sum(dealer_value) <=21 and sum(player_value) >21: 
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds -= Player.bet
-        print(f"\nDealer won! and {currentplayer} went bust. {currentplayer} lost ${Player.bet}! and now has ${player_funds} remaining\n")
+        print(f"\nDealer won and {currentplayer} went bust")
+        print(f"{currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    if sum(player_value) <=21 and sum(dealer_value) >21: 
+    elif sum(player_value) <=20 and sum(dealer_value) >21: 
         print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
         player_funds += Player.bet
-        print(f"\n{currentplayer} is the winner and dealer went bust! {currentplayer} won ${Player.bet}! and now has ${player_funds} remaining\n")
+        print(f"\n{currentplayer} is the winner and dealer went bust")
+        print(f"\n{currentplayer} won ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-        pass
+
+    elif sum(dealer_value) < sum(player_value) and sum(player_value) == 21:
+        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+        player_funds += Player.bet*10
+        print(f"{currentplayer} is the winner with 21 (Pays 10/1)")
+        print(f"{currentplayer} won ${Player.bet*10} and now has ${player_funds} remaining\n")
+        play_again_check()
+    elif sum(player_value) ==21 and sum(dealer_value) >21: 
+        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+        player_funds += Player.bet*10
+        print(f"\n{currentplayer} is the winner with 21 (Pays 10/1) Dealer went bust")
+        print(f"\n{currentplayer} won ${Player.bet*10} and now has ${player_funds} remaining\n")
+        play_again_check()
 
 # @@@@@@@@@@@@@@@@@@@@@@
 #
@@ -343,6 +369,7 @@ def repeat_game():
     for j in whole_deck.all_cards: original_shuffle.append(j)
 
     #currentplayer = Player()
+    print("**************** NEW GAME **************** NEW GAME ****************")
     print(f"\nHello again {currentplayer}\n")
 
     bet_func()
