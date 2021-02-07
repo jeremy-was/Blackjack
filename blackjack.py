@@ -40,28 +40,40 @@ class Deck:
 
 class Dealer:
 
-    dealer_hand = []
+    hand = []
+    hand_value = []
+    card_names = []
 
     def __init__(self):
 
-        self.hand = hand
+        self.hand = []
+        self.hand_value = []
+        self.card_names = []
 
-    def hand_value(self):
-        self.h_value = h_value
+    #def hand_value(self):
+        
 
     def __str__(self):
         return "Dealer currently has " + self.hand + ", with a value of " + self.hand_value
 
 class Player:
 
+    hand = []
+    hand_value = []
+    card_names = []
+
     def __init__(self):
 
         self.name = input('Please enter your name:  ')
-        self.allcards = []
-        self.allcards_value = []
+        self.hand = []
+        self.hand_value = []
+        self.card_names = []
+        # self.allcards = []
+        # self.allcards_value = []
+        self.bet = 0
 
-    def bet(self):
-        self.bet_amount = bet_amount
+    # def bet(self):
+    #     self.bet_amount = bet_amount
 
     # def funds(self):
     #    self.funds = funds
@@ -101,80 +113,80 @@ def bet_func():
 #     print(f"you have ${player_funds} remaining")
 
 def ace_check():
-    if player_card_list[-1].value == 11:
-        player_card_list[-1].value = int(input("Please choose 11 or 1 for your Ace:  "))
-        player_value.append(player_card_list[-1].value)
-        player_card_names.append(player_card_list[-1])
+    if Player.hand[-1].value == 11:
+        Player.hand[-1].value = int(input("Please choose 11 or 1 for your Ace:  "))
+        Player.hand_value.append(Player.hand[-1].value)
+        Player.card_names.append(Player.hand[-1])
     else:
-        player_value.append(player_card_list[-1].value)
-        player_card_names.append(player_card_list[-1])
+        Player.hand_value.append(Player.hand[-1].value)
+        Player.card_names.append(Player.hand[-1])
 
 def two_ace_check():
-    if player_card_list[0].value == 11 and player_card_list[1].value == 11:
-        player_card_list[0].value = 1
-        player_value.append(player_card_list[0].value)
-        player_value.append(player_card_list[1].value)
-        player_card_names.append(player_card_list[0])
-        player_card_names.append(player_card_list[1])
+    if Player.hand[0].value == 11 and Player.hand[1].value == 11:
+        Player.hand[0].value = 1
+        Player.hand_value.append(Player.hand[0].value)
+        Player.hand_value.append(Player.hand[1].value)
+        Player.card_names.append(Player.hand[0])
+        Player.card_names.append(Player.hand[1])
     else:
-        player_value.append(player_card_list[0].value)
-        player_value.append(player_card_list[1].value)
-        player_card_names.append(player_card_list[0])
-        player_card_names.append(player_card_list[1])
+        Player.hand_value.append(Player.hand[0].value)
+        Player.hand_value.append(Player.hand[1].value)
+        Player.card_names.append(Player.hand[0])
+        Player.card_names.append(Player.hand[1])
 
 def player_addvalue_func():
-    global player_value
-    global player_card_names
-    global player_card_list
-    # for x in player_card_list:
+    # global Player.hand_value
+    # global Player.card_names
+    #global Player.hand
+    # for x in Player.hand:
     #     print(x.value)
     
-    # if len(player_value) == 2: (looks like this was an error)
-    if len(player_card_list) == 2:
+    # if len(Player.hand_value) == 2: (looks like this was an error)
+    if len(Player.hand) == 2:
         two_ace_check()
     else:
         ace_check()
         
 
 def dealer_addvalue_func():
-    global dealer_value
-    global dealer_card_names
-    global dealer_card_list
-    # for x in dealer_card_list:
+    #global Dealer.hand_value
+    #global Dealer.card_names
+    #global Dealer.hand
+    # for x in Dealer.hand:
     #     print(x.value)
    
-    # if len(dealer_value) == 2:
-    if len(dealer_card_list) == 2:
-        dealer_value.append(dealer_card_list[0].value)
-        dealer_value.append(dealer_card_list[1].value)
-        dealer_card_names.append(dealer_card_list[0])
-        dealer_card_names.append(dealer_card_list[1])
+    # if len(Dealer.hand_value) == 2:
+    if len(Dealer.hand) == 2:
+        Dealer.hand_value.append(Dealer.hand[0].value)
+        Dealer.hand_value.append(Dealer.hand[1].value)
+        Dealer.card_names.append(Dealer.hand[0])
+        Dealer.card_names.append(Dealer.hand[1])
     else:
-        dealer_value.append(dealer_card_list[-1].value)
-        dealer_card_names.append(dealer_card_list[-1])
+        Dealer.hand_value.append(Dealer.hand[-1].value)
+        Dealer.card_names.append(Dealer.hand[-1])
 
 def gameon_player_func():
-    global player_value
+    # global Player.hand_value
 
     gameon = True
     while gameon:
 
         print(f"\n{currentplayer}'s cards:")
-        for c in player_card_names: print(c)
+        for c in Player.card_names: print(c)
         print(f"\n{currentplayer}'s card values:")
-        print(player_value)
+        print(Player.hand_value)
         print(f"\n{currentplayer}'s hand value:")
-        print(sum(player_value))
+        print(sum(Player.hand_value))
         print("* * * * * * *")
 
-        if sum(player_value) >21:
+        if sum(Player.hand_value) >21:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
             print(f"{currentplayer} is Bust!")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
 
-        elif sum(player_value) <= 19:
+        elif sum(Player.hand_value) <= 19:
             while True:
                 player_choice = (input("\nHit or stay?  "))          
                 if player_choice == ("hit") or player_choice == ("Hit") or player_choice == ("H") or player_choice == ("h"):
@@ -184,20 +196,20 @@ def gameon_player_func():
                 elif player_choice == ("stay") or player_choice == ("Stay") or player_choice == ("S") or player_choice == ("s"):
                     gameon = False
                     print(f'\nGood luck {currentplayer}. Staying! Total value:')
-                    print(sum(player_value))
+                    print(sum(Player.hand_value))
                     print("* * * * * * * * * * * * * * * * * * * * *\n")
                     gameon_dealer_finish_func()
                     break
                 else:
                     print("Bad input, please try again")
                         
-        elif sum(player_value) == 20:
+        elif sum(Player.hand_value) == 20:
             print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
             print(f"{currentplayer} is on 20. Can't take another card")
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
-        elif player_value[0] == 11 and player_value[1] == 10 or player_value[1] == 11 and player_value[0] == 10:
+        elif Player.hand_value[0] == 11 and Player.hand_value[1] == 10 or Player.hand_value[1] == 11 and Player.hand_value[0] == 10:
             print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
             print(f"{currentplayer} has Black Jack!")
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
@@ -211,31 +223,31 @@ def gameon_player_func():
             gameon_dealer_finish_func()
 
 def gameon_dealer_func():
-    global dealer_value
+    #global Dealer.hand_value
 
     print("\nDealer cards:")
-    for c in dealer_card_names: print(c)
+    for c in Dealer.card_names: print(c)
     print("\nDealer card values:")
-    print(dealer_value)
+    print(Dealer.hand_value)
     print('\nDealer total value:')
-    print(sum(dealer_value))
+    print(sum(Dealer.hand_value))
     print("* * * * * * *")
 
 def gameon_dealer_finish_func():
-    global dealer_value
+    #global Dealer.hand_value
 
     gameon = True
     while gameon:
 
         print("\nDealer cards:")
-        for c in dealer_card_names: print(c)
+        for c in Dealer.card_names: print(c)
         print("\nDealer card values:")
-        print(dealer_value)
+        print(Dealer.hand_value)
         print('\nDealer total value:')
-        print(sum(dealer_value))
+        print(sum(Dealer.hand_value))
         print("* * * * * * *\n")
 
-        if sum(dealer_value) >21:
+        if sum(Dealer.hand_value) >21:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
             print("Dealer is Bust!")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
@@ -243,18 +255,18 @@ def gameon_dealer_finish_func():
             end_of_game()
             break
 
-        elif sum(dealer_value) <= 18:
+        elif sum(Dealer.hand_value) <= 18:
             dealer_one_card_deal()
             dealer_addvalue_func()
                         
-        elif sum(dealer_value) == 19 or sum(dealer_value) ==20:
+        elif sum(Dealer.hand_value) == 19 or sum(Dealer.hand_value) ==20:
             print("\n* * * * * * * * * * * * * * * * * * * * *")
             print("Dealer on 19+. Staying!")
             print("* * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             end_of_game()
             break
-        elif dealer_value[0] == 11 and dealer_value[1] == 10 or dealer_value[1] == 11 and dealer_value[0] == 10:
+        elif Dealer.hand_value[0] == 11 and Dealer.hand_value[1] == 10 or Dealer.hand_value[1] == 11 and Dealer.hand_value[0] == 10:
             print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
             print(f"Dealer has Black Jack!")
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
@@ -270,53 +282,53 @@ def gameon_dealer_finish_func():
 
 def end_of_game():
     global player_funds
-    if sum(dealer_value) == sum(player_value) and sum(dealer_value) <= 21 and sum(player_value) <= 21:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    if sum(Dealer.hand_value) == sum(Player.hand_value) and sum(Dealer.hand_value) <= 21 and sum(Player.hand_value) <= 21:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         print(f"\nIt's a draw! {currentplayer} still has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(dealer_value) == sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) == sum(Player.hand_value) and sum(Dealer.hand_value) > 21 and sum(Player.hand_value) > 21:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"\nYou both went bust! with the same score {currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
         play_again_check()
-    elif sum(dealer_value) != sum(player_value) and sum(dealer_value) > 21 and sum(player_value) > 21:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) != sum(Player.hand_value) and sum(Dealer.hand_value) > 21 and sum(Player.hand_value) > 21:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"\nYou both went bust! {currentplayer} lost ${Player.bet} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(dealer_value) > sum(player_value) and sum(dealer_value) <= 21:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) > sum(Player.hand_value) and sum(Dealer.hand_value) <= 21:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
-        print(f"Dealer won! {currentplayer} lost ${Player.bet} and now has ${player_funds:,} remaining\n")
+        print(f"Dealer won! {currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(dealer_value) < sum(player_value) and sum(player_value) <= 20:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) < sum(Player.hand_value) and sum(Player.hand_value) <= 20:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet
-        print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet} and now has ${player_funds:,} remaining\n")
+        print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(dealer_value) <=21 and sum(player_value) >21: 
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) <=21 and sum(Player.hand_value) >21: 
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"\nDealer won and {currentplayer} went bust")
-        print(f"{currentplayer} lost ${Player.bet} and now has ${player_funds:,} remaining\n")
+        print(f"{currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(player_value) <=20 and sum(dealer_value) >21: 
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Player.hand_value) <=20 and sum(Dealer.hand_value) >21: 
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet
         print(f"\n{currentplayer} is the winner and dealer went bust")
-        print(f"\n{currentplayer} won ${Player.bet} and now has ${player_funds:,} remaining\n")
+        print(f"\n{currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(dealer_value) < sum(player_value) and sum(player_value) == 21:
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Dealer.hand_value) < sum(Player.hand_value) and sum(Player.hand_value) == 21:
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet*50
         print(f"{currentplayer} is the winner with 21 (Payout 50/1)")
-        print(f"{currentplayer} won ${Player.bet*50} and now has ${player_funds:,} remaining\n")
+        print(f"{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
-    elif sum(player_value) ==21 and sum(dealer_value) >21: 
-        print(f"The scores are: \n{currentplayer}: {sum(player_value)} \nDealer: {sum(dealer_value)}")
+    elif sum(Player.hand_value) ==21 and sum(Dealer.hand_value) >21: 
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet*50
         print(f"\n{currentplayer} is the winner with 21 (Payout 50/1) Dealer went bust")
-        print(f"\n{currentplayer} won ${Player.bet*50} and now has ${player_funds:,} remaining\n")
+        print(f"\n{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
         play_again_check()
 
 # @@@@@@@@@@@@@@@@@@@@@@
@@ -330,8 +342,6 @@ def end_of_game():
 # All Subsequent deals of ONE card to the DEALER
 def dealer_one_card_deal():
     global whole_deck
-    print(f"\n**************************************** Cards left in deck: {len(whole_deck.all_cards)}")
-    print()
     if len(whole_deck.all_cards) <10:
         print("\n***************************")
         print("    Deck low on cards")
@@ -342,15 +352,13 @@ def dealer_one_card_deal():
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
-        dealer_card_list.append(whole_deck.deal_one())
+        Dealer.hand.append(whole_deck.deal_one())
     else:
-        dealer_card_list.append(whole_deck.deal_one())
+        Dealer.hand.append(whole_deck.deal_one())
 
 # All Subsequent deals of ONE card to the PLAYER
 def player_one_card_deal():
     global whole_deck
-    print(f"\n**************************************** Cards left in deck: {len(whole_deck.all_cards)}")
-    print()
     if len(whole_deck.all_cards) <10:
         print("\n***************************")
         print("    Deck low on cards")
@@ -361,15 +369,14 @@ def player_one_card_deal():
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
-        player_card_list.append(whole_deck.deal_one())
+        Player.hand.append(whole_deck.deal_one())
     else:
-        player_card_list.append(whole_deck.deal_one())
+        Player.hand.append(whole_deck.deal_one())
 
 # Functions for (two cards each) - to the dealer and to the player
 def dealer_two_card_deal():
     global whole_deck
-    print(f"\n**************************************** Cards left in deck: {len(whole_deck.all_cards)}")
-    print()
+    # print(f"\n**************************************** Cards left in deck: {len(whole_deck.all_cards)}\n")
     if len(whole_deck.all_cards) <10:
         print("\n***************************")
         print("    Deck low on cards")
@@ -380,16 +387,14 @@ def dealer_two_card_deal():
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
-        dealer_card_list.append(whole_deck.deal_one())
-        dealer_card_list.append(whole_deck.deal_another())
+        Dealer.hand.append(whole_deck.deal_one())
+        Dealer.hand.append(whole_deck.deal_another())
     else:
-        dealer_card_list.append(whole_deck.deal_one())
-        dealer_card_list.append(whole_deck.deal_another())
+        Dealer.hand.append(whole_deck.deal_one())
+        Dealer.hand.append(whole_deck.deal_another())
 
 def player_two_card_deal():
     global whole_deck
-    print(f"\n**************************************** Cards left in deck: {len(whole_deck.all_cards)}")
-    print()
     if len(whole_deck.all_cards) <10:
         print("\n***************************")
         print("    Deck low on cards")
@@ -400,11 +405,11 @@ def player_two_card_deal():
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
-        player_card_list.append(whole_deck.deal_one())
-        player_card_list.append(whole_deck.deal_another())
+        Player.hand.append(whole_deck.deal_one())
+        Player.hand.append(whole_deck.deal_another())
     else:
-        player_card_list.append(whole_deck.deal_one())
-        player_card_list.append(whole_deck.deal_another())
+        Player.hand.append(whole_deck.deal_one())
+        Player.hand.append(whole_deck.deal_another())
 
 def play_again_check():
     while True:
@@ -421,34 +426,38 @@ def play_again_check():
 def reveal_before_bet():
 
     print("\nDealer cards:")
-    for c in dealer_card_names: print(c)
+    for c in Dealer.card_names: print(c)
     print("\nDealer card values:")
-    print(dealer_value)
+    print(Dealer.hand_value)
     print('\nDealer total value:')
-    print(sum(dealer_value))
+    print(sum(Dealer.hand_value))
     print("* * * * * * *\n")
 
     print(f"\n{currentplayer}'s cards:")
-    for c in player_card_names: print(c)
+    for c in Player.card_names: print(c)
     print(f"\n{currentplayer}'s card values:")
-    print(player_value)
+    print(Player.hand_value)
     print(f"\n{currentplayer}'s hand value:")
-    print(sum(player_value))
+    print(sum(Player.hand_value))
     print("* * * * * * * * * * * * * * * * * * * * *\n")
 
 def repeat_game():
-    player_card_list.clear()
-    player_card_names.clear()
-    player_value.clear()
-    dealer_card_list.clear()
-    dealer_card_names.clear()
-    dealer_value.clear()
-    whole_deck = Deck()
-    random.shuffle(whole_deck.all_cards)
+    # global whole_deck
+    Player.hand.clear()
+    Player.card_names.clear()
+    Player.hand_value.clear()
+    Dealer.hand.clear()
+    Dealer.card_names.clear()
+    Dealer.hand_value.clear()
+    # whole_deck = Deck()
+    # random.shuffle(whole_deck.all_cards)
     #for j in whole_deck.all_cards: original_shuffle.append(j)
 
     #currentplayer = Player()
     print("**************** NEW GAME **************** NEW GAME ****************")
+    print("**************** NEW GAME **************** NEW GAME ****************")
+    print("**************** NEW GAME **************** NEW GAME ****************")
+    print(f"\n********************** Cards left in deck: {len(whole_deck.all_cards)} **********************\n")
     print(f"\nHello again {currentplayer}\n")
 
     # Execute the First deal (two cards each)
@@ -460,7 +469,7 @@ def repeat_game():
     # add the dealt card(s) value to a list for value calculation
     player_addvalue_func()
 
-    reveal_before_bet()
+    reveal_before_bet() # Player has the upper hand. Can see the dealers cards before betting :-)
 
     bet_func()
 
@@ -470,22 +479,22 @@ def repeat_game():
     gameon_player_func()
 
 
-player_value = []
-dealer_value = []
+# Player.hand_value = []
+# Dealer.hand_value = []
 
-player_card_names = []
-dealer_card_names = []
+# Player.card_names = []
+# Dealer.card_names = []
 
-player_card_list = []
-dealer_card_list = []
-original_shuffle = []
+# Player.hand = []
+# Dealer.hand = []
+# original_shuffle = []
 
 # 
 # Uncomment these if/when I start to pull card list from Classes above
 # 
 
-# player_card_list = Player.player_hand
-# dealer_card_list = Dealer.dealer_hand
+# Player.hand = Player.player_hand
+# Dealer.hand = Dealer.dealer_hand
 
 
 
@@ -493,7 +502,7 @@ original_shuffle = []
 
 whole_deck = Deck()
 random.shuffle(whole_deck.all_cards)
-for j in whole_deck.all_cards: original_shuffle.append(j)
+# for j in whole_deck.all_cards: original_shuffle.append(j)
 
 currentplayer = Player()
 print(f"Welcome {currentplayer}\n")
@@ -507,7 +516,7 @@ dealer_addvalue_func()
 # add the dealt card(s) value to a list for value calculation
 player_addvalue_func()
 
-reveal_before_bet()
+reveal_before_bet() # Player has the upper hand. Can see the dealers cards before betting :-)
 
 bet_func()
 
