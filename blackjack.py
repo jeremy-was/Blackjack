@@ -1,9 +1,15 @@
 import random
+import datetime
+# from datetime import datetime
+# from datetime import date
 suits = ('Hearts','Diamonds','Clubs','Spades')
 ranks = ('Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King','Ace')
 values = {'Two':2,'Three':3,'Four':4,'Five':5,'Six':6,'Seven':7,'Eight':8,'Nine':9,'Ten':10,'Jack':10,'Queen':10,'King':10,'Ace':11}
 player_funds = 1000
 game_count = 1
+player_total = 0
+dealer_total = 0
+draw = 0
 
 class Card:
 
@@ -70,8 +76,6 @@ class Player:
 
     def __str__(self):
         return self.name #+ " has " + "$" + self.player_funds + " remaining."
-
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ FUNCTIONS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 def bet_func():
     global player_funds
@@ -155,7 +159,7 @@ def gameon_player_func():
 
         elif sum(Player.hand_value) <= 19:
             while True:
-                player_choice = (input("\nHit or stay?  "))          
+                player_choice = (input("\nHit or stay? h/s "))          
                 if player_choice == ("hit") or player_choice == ("Hit") or player_choice == ("H") or player_choice == ("h"):
                     player_one_card_deal()
                     player_addvalue_func()
@@ -172,7 +176,7 @@ def gameon_player_func():
                         
         elif sum(Player.hand_value) == 20:
             print("\n* * * * * * * * * * * * * * * * * * * * * * * * * *")
-            print(f"{currentplayer} is on 20. Can't take another card")
+            print(f"{currentplayer} is on 20. Staying")
             print("* * * * * * * * * * * * * * * * * * * * * * * * * * *\n")
             gameon = False
             gameon_dealer_finish_func()
@@ -191,11 +195,11 @@ def gameon_player_func():
 
 def gameon_dealer_func():
 
-    print("\nDealer cards:")
+    print("\nDealer's cards:")
     for c in Dealer.card_names: print(c)
-    print("\nDealer card values:")
+    print("\nDealer's card values:")
     print(Dealer.hand_value)
-    print('\nDealer total value:')
+    print("\nDealer's total value:")
     print(sum(Dealer.hand_value))
     print("* * * * * * *")
 
@@ -204,11 +208,11 @@ def gameon_dealer_finish_func():
     gameon = True
     while gameon:
 
-        print("\nDealer cards:")
+        print("\nDealer's cards:")
         for c in Dealer.card_names: print(c)
-        print("\nDealer card values:")
+        print("\nDealer's card values:")
         print(Dealer.hand_value)
-        print('\nDealer total value:')
+        print("\nDealer's hand value:")
         print(sum(Dealer.hand_value))
         print("* * * * * * *\n")
 
@@ -245,75 +249,201 @@ def gameon_dealer_finish_func():
             end_of_game()
             break
 
+# def list_to_string():
+#     temp_cards = Dealer.card_names
+#     dealer_cards = " "
+#     return (dealer_cards.join(temp_cards))
+
 def end_of_game():
     global player_funds
-    if sum(Dealer.hand_value) == sum(Player.hand_value) and sum(Dealer.hand_value) <= 21 and sum(Player.hand_value) <= 21:
+    global dealer_total
+    global player_total
+    global draw
+    dealer_score = sum(Dealer.hand_value)
+    player_score = sum(Player.hand_value)
+    if sum(Dealer.hand_value) == sum(Player.hand_value) and sum(Dealer.hand_value) <= 20 and sum(Player.hand_value) <= 20:
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         print(f"\nIt's a draw! {currentplayer} still has ${player_funds:,} remaining\n")
+        draw += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} (Draw)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} keeps: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
-    elif sum(Dealer.hand_value) == sum(Player.hand_value) and sum(Dealer.hand_value) > 21 and sum(Player.hand_value) > 21:
-        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
-        player_funds -= Player.bet
-        print(f"\nYou both went bust with the same score")
-        print(f"{currentplayer} lost ${Player.bet} and now has ${player_funds} remaining\n")
-        play_again_check()
-    elif sum(Dealer.hand_value) != sum(Player.hand_value) and sum(Dealer.hand_value) > 21 and sum(Player.hand_value) > 21:
+    elif sum(Dealer.hand_value) and sum(Player.hand_value) > 21:
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"\nYou both went bust!")
         print(f"{currentplayer} lost ${Player.bet} and now has ${player_funds:,} remaining\n")
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} (Both went bust)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} lost: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Dealer.hand_value) > sum(Player.hand_value) and sum(Dealer.hand_value) <= 21:
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"Dealer won! {currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
+        dealer_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} (Dealer won)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} lost: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Dealer.hand_value) < sum(Player.hand_value) and sum(Player.hand_value) <= 20:
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet
         print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
+        player_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} ({currentplayer} won)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} won: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Dealer.hand_value) <=21 and sum(Player.hand_value) >21: 
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds -= Player.bet
         print(f"\nDealer won and {currentplayer} went bust")
         print(f"{currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
+        dealer_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} (Dealer won, and {currentplayer} went bust)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} lost: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Player.hand_value) <=20 and sum(Dealer.hand_value) >21: 
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet
         print(f"\n{currentplayer} is the winner and dealer went bust")
         print(f"\n{currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
+        player_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} ({currentplayer} won, and Dealer went bust)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} won: ${Player.bet:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Dealer.hand_value) < sum(Player.hand_value) and sum(Player.hand_value) == 21:
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet*50
         print(f"{currentplayer} is the winner with 21 (Payout 50/1)")
         print(f"{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
+        player_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} ({currentplayer} won with 21)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} won: ${Player.bet*50:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
+        play_again_check()
+    elif sum(Player.hand_value) ==21 and sum(Dealer.hand_value) ==21: 
+        print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
+        player_funds += Player.bet*50
+        print(f"\n{currentplayer} and dealer draw with 21.. Payout is still 50/1 :-)")
+        print(f"\n{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
+        draw += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} ({currentplayer} and dealer draw with 21)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} won: ${Player.bet*50:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
     elif sum(Player.hand_value) ==21 and sum(Dealer.hand_value) >21: 
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         player_funds += Player.bet*50
-        print(f"\n{currentplayer} is the winner with 21 (Payout 50/1) Dealer went bust")
+        print(f"\n{currentplayer} has 21 and dealer is bust")
         print(f"\n{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
+        player_total += 1
+        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file.write(f"\nGame number {game_count} ({currentplayer} 21 and dealer went bust)\n")
+        stats_file.write(f"\nDealer score: {dealer_score}\n")
+        for x in range(len(Dealer.card_names)):
+            stats_file.write(f"{Dealer.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} score: {player_score}\n")
+        for x in range(len(Player.card_names)):
+            stats_file.write(f"{Player.card_names[x]}\n")
+        stats_file.write(f"\n{currentplayer} won: ${Player.bet*50:,}")
+        stats_file.write(f"\n${player_funds:,} remaining\n")
+        stats_file.write("\n******************************")
+        stats_file.close()
         play_again_check()
 
 # @@@@@@@@@@@@@@@@@@@@@@
 #
-# ADD TO THIS FUNCTION 
-# SO GAME STATS CAN BE ADDED TO A FILE OR SENT VIA EMAIL
+# ADD TO THIS FUNCTION SO GAME STATS CAN SENT VIA EMAIL
 #
 # @@@@@@@@@@@@@@@@@@@@@@
 
 def dealer_one_card_deal():
     global whole_deck
     if len(whole_deck.all_cards) <10:
+        print("\n"*20)
         print("\n***************************")
-        print("    Deck low on cards")
+        print("    Deck was low on cards")
         print("***************************")
-        print("    Adding a new deck")
+        print("    Added new deck")
         print("***************************")
-        print("    Shuffling new deck")
+        print("    Shuffled new deck")
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
@@ -324,12 +454,13 @@ def dealer_one_card_deal():
 def player_one_card_deal():
     global whole_deck
     if len(whole_deck.all_cards) <10:
+        print("\n"*20)
         print("\n***************************")
-        print("    Deck low on cards")
+        print("    Deck was low on cards")
         print("***************************")
-        print("    Adding a new deck")
+        print("    Added new deck")
         print("***************************")
-        print("    Shuffling new deck")
+        print("    Shuffled new deck")
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
@@ -340,12 +471,13 @@ def player_one_card_deal():
 def dealer_two_card_deal():
     global whole_deck
     if len(whole_deck.all_cards) <10:
+        print("\n"*20)
         print("\n***************************")
-        print("    Deck low on cards")
+        print("    Deck was low on cards")
         print("***************************")
-        print("    Adding a new deck")
+        print("    Added new deck")
         print("***************************")
-        print("    Shuffling new deck")
+        print("    Shuffled new deck")
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
@@ -358,12 +490,13 @@ def dealer_two_card_deal():
 def player_two_card_deal():
     global whole_deck
     if len(whole_deck.all_cards) <10:
+        print("\n"*20)
         print("\n***************************")
-        print("    Deck low on cards")
+        print("    Deck was low on cards")
         print("***************************")
-        print("    Adding a new deck")
+        print("    Added new deck")
         print("***************************")
-        print("    Shuffling new deck")
+        print("    Shuffled new deck")
         print("***************************\n")
         whole_deck = Deck()
         random.shuffle(whole_deck.all_cards)
@@ -383,17 +516,29 @@ def play_again_check():
             break
         elif playagain == ("n") or playagain == ("N"):
             print("\nThanks for playing!\n")
+            print("\n"*5)
+            stats_file = open(f"{currentplayer}_stats.txt", "a+")
+            stats_file.write("\n"*5)
+            stats_file.write("\n******************************")
+            stats_file.write("\nGame stats")
+            stats_file.write("\n******************************\n")
+            stats_file.write(f"\nNumber of games {game_count}\n")
+            stats_file.write(f"\nDealer won: {dealer_total}\n")
+            stats_file.write(f"\n{currentplayer} won: {player_total}\n")
+            stats_file.write(f"\nDraws: {draw}\n")
+            stats_file.write("\n******************************")
+            stats_file.close()
             break
         else:
             print("\nbad input, please try again\n")
 
 def reveal_before_bet():
 
-    print("\nDealer cards:")
+    print("\nDealer's cards:")
     for c in Dealer.card_names: print(c)
-    print("\nDealer card values:")
+    print("\nDealer's card values:")
     print(Dealer.hand_value)
-    print('\nDealer total value:')
+    print("\nDealer's hand value:")
     print(sum(Dealer.hand_value))
     print("* * * * * * *\n")
 
@@ -435,13 +580,22 @@ def repeat_game():
     # Run the calc for 21 etc
     gameon_player_func()
 
-# @@@@@@@@@@@@@@@@@@@@@@@ Game play script @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#@@@@@@@@@@@@@@@@@@@@@@@ Game play script @@@@@@@@@@@@@@@@@@@@@@@@@@
 
 whole_deck = Deck()
 random.shuffle(whole_deck.all_cards)
 
 currentplayer = Player()
-print(f"Welcome {currentplayer}\n")
+gameinfo = datetime.datetime.now()
+gamedate = (gameinfo.strftime("%B %d, %Y"))
+gametime = (gameinfo.strftime("%H:%M:%S"))
+print(f"\nWelcome {currentplayer}")
+stats_file = open(f"{currentplayer}_stats.txt", "x")
+stats_file = open(f"{currentplayer}_stats.txt", "a+")
+stats_file.write(f"Black Jack 'Mukas' stats for {currentplayer}\n")
+stats_file.write(f"\n{gamedate}\n")
+stats_file.write(f"{gametime}\n")
+stats_file.close()
 
 # First deal (two cards each)
 dealer_two_card_deal()
