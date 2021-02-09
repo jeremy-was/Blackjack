@@ -1,5 +1,7 @@
 import random
 import datetime
+import smtplib
+from email.mime.text import MIMEText
 # from datetime import datetime
 # from datetime import date
 suits = ('Hearts','Diamonds','Clubs','Spades')
@@ -92,7 +94,7 @@ def bet_func():
             if Player.bet > player_funds:
                 Player.bet = int(input(f"Not enough money, you have ${player_funds:,} remining, how much you betting?:   "))
         except:
-            print('please enter a number')
+            print('Please enter a number')
             continue
         else:
             print(f'${Player.bet} bet placed successfully')
@@ -265,7 +267,7 @@ def end_of_game():
         print(f"The scores are: \n{currentplayer}: {sum(Player.hand_value)} \nDealer: {sum(Dealer.hand_value)}")
         print(f"\nIt's a draw! {currentplayer} still has ${player_funds:,} remaining\n")
         draw += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} (Draw)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -283,7 +285,7 @@ def end_of_game():
         player_funds -= Player.bet
         print(f"\nYou both went bust!")
         print(f"{currentplayer} lost ${Player.bet} and now has ${player_funds:,} remaining\n")
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} (Both went bust)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -301,7 +303,7 @@ def end_of_game():
         player_funds -= Player.bet
         print(f"Dealer won! {currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         dealer_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} (Dealer won)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -319,7 +321,7 @@ def end_of_game():
         player_funds += Player.bet
         print(f"{currentplayer} is the winner! {currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         player_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} ({currentplayer} won)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -338,7 +340,7 @@ def end_of_game():
         print(f"\nDealer won and {currentplayer} went bust")
         print(f"{currentplayer} lost ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         dealer_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} (Dealer won, and {currentplayer} went bust)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -357,7 +359,7 @@ def end_of_game():
         print(f"\n{currentplayer} is the winner and dealer went bust")
         print(f"\n{currentplayer} won ${Player.bet:,} and now has ${player_funds:,} remaining\n")
         player_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} ({currentplayer} won, and Dealer went bust)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -376,7 +378,7 @@ def end_of_game():
         print(f"{currentplayer} is the winner with 21 (Payout 50/1)")
         print(f"{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
         player_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} ({currentplayer} won with 21)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -395,7 +397,7 @@ def end_of_game():
         print(f"\n{currentplayer} and dealer draw with 21.. Payout is still 50/1 :-)")
         print(f"\n{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
         draw += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} ({currentplayer} and dealer draw with 21)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -414,7 +416,7 @@ def end_of_game():
         print(f"\n{currentplayer} has 21 and dealer is bust")
         print(f"\n{currentplayer} won ${Player.bet*50:,} and now has ${player_funds:,} remaining\n")
         player_total += 1
-        stats_file = open(f"{currentplayer}_stats.txt", "a+")
+        stats_file = open("stats.txt", "a+")
         stats_file.write(f"\nGame number {game_count} ({currentplayer} 21 and dealer went bust)\n")
         stats_file.write(f"\nDealer score: {dealer_score}\n")
         for x in range(len(Dealer.card_names)):
@@ -427,12 +429,6 @@ def end_of_game():
         stats_file.write("\n******************************")
         stats_file.close()
         play_again_check()
-
-# @@@@@@@@@@@@@@@@@@@@@@
-#
-# ADD TO THIS FUNCTION SO GAME STATS CAN SENT VIA EMAIL
-#
-# @@@@@@@@@@@@@@@@@@@@@@
 
 def dealer_one_card_deal():
     global whole_deck
@@ -509,15 +505,15 @@ def player_two_card_deal():
 def play_again_check():
     global game_count
     while True:
-        playagain = input("\nPlay again? y/n   \n")
+        playagain = input("\nPlay again? y/n   ")
         if playagain == ("y") or playagain == ("Y"):
             game_count += 1
             repeat_game()
             break
         elif playagain == ("n") or playagain == ("N"):
             print("\nThanks for playing!\n")
-            print("\n"*5)
-            stats_file = open(f"{currentplayer}_stats.txt", "a+")
+            print("\nThe game stats will be emailed to you\n")
+            stats_file = open("stats.txt", "a+")
             stats_file.write("\n"*5)
             stats_file.write("\n******************************")
             stats_file.write("\nGame stats")
@@ -527,10 +523,43 @@ def play_again_check():
             stats_file.write(f"\n{currentplayer} won: {player_total}\n")
             stats_file.write(f"\nDraws: {draw}\n")
             stats_file.write("\n******************************")
+            stats_file.write("\n*******")
+            stats_file.write("\n******")
+            stats_file.write("\n*****")
+            stats_file.write("\n****")
+            stats_file.write("\n***")
+            stats_file.write("\n**")
+            stats_file.write("\n*")
+            stats_file.write("\nMukas Code Corporation")
             stats_file.close()
+            # read_the_stats()
+            email_the_stats()
             break
         else:
-            print("\nbad input, please try again\n")
+            print("\nBad input, please try again\n")
+
+def email_the_stats():
+    with open('stats.txt', 'r') as gamefile:
+        gameinfo = gamefile.read().rstrip('\n')
+
+    fromx = 'Mukas Code Corporation'
+    sender_email  = input("Type sender email address and press enter:  ")
+    to  = input("Type recipient email address and press enter:  ")
+    msg = MIMEText(gameinfo)
+    msg['Subject'] = 'Game stats, Mukas Black Jack'
+    msg['From'] = fromx
+    msg['To'] = to
+
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    password = input("Type sender password and press enter:  ")
+    server.starttls()
+    server.ehlo()
+    server.login(sender_email, password)
+    server.sendmail(fromx, to, msg.as_string())
+    server.quit()
+    print("\n"*2)
+    print("Your game stats have been emailed")
+    print("\n"*2)
 
 def reveal_before_bet():
 
@@ -590,9 +619,11 @@ gameinfo = datetime.datetime.now()
 gamedate = (gameinfo.strftime("%B %d, %Y"))
 gametime = (gameinfo.strftime("%H:%M:%S"))
 print(f"\nWelcome {currentplayer}")
-stats_file = open(f"{currentplayer}_stats.txt", "x")
-stats_file = open(f"{currentplayer}_stats.txt", "a+")
-stats_file.write(f"Black Jack 'Mukas' stats for {currentplayer}\n")
+# stats_file = open(f"{currentplayer}_stats.txt", "x")
+# stats_file = open(f"{currentplayer}_stats.txt", "a+")
+stats_file = open("stats.txt", "x")
+stats_file = open("stats.txt", "a+")
+stats_file.write(f"Mukas Black Jack, stats for {currentplayer}\n")
 stats_file.write(f"\n{gamedate}\n")
 stats_file.write(f"{gametime}\n")
 stats_file.close()
