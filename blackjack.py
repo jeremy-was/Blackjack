@@ -1,5 +1,6 @@
 import random
 import datetime
+import os
 import smtplib
 from email.mime.text import MIMEText
 # from datetime import datetime
@@ -618,6 +619,10 @@ currentplayer = Player()
 gameinfo = datetime.datetime.now()
 gamedate = (gameinfo.strftime("%B %d, %Y"))
 gametime = (gameinfo.strftime("%H:%M:%S"))
+if os.path.exists("stats.txt"):
+    os.remove("stats.txt")
+else:
+    print("...")
 print(f"\nWelcome {currentplayer}")
 # stats_file = open(f"{currentplayer}_stats.txt", "x")
 # stats_file = open(f"{currentplayer}_stats.txt", "a+")
