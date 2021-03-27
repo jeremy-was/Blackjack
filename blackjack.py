@@ -90,7 +90,7 @@ def bet_func():
                 Player.bet = 0
                 break
             if player_funds > 0:
-                Player.bet = int(input(f"You have ${player_funds:,} remining, how much you betting?:   "))
+                Player.bet = int(input(f"You have ${player_funds:,}, how much you betting?:   "))
 
             if Player.bet > player_funds:
                 Player.bet = int(input(f"Not enough money, you have ${player_funds:,} remining, how much you betting?:   "))
