@@ -1,0 +1,49 @@
+Mukas Black Jack, stats for Jeremy
+
+September 02, 2021
+14:31:57
+
+Game number 1 (Jeremy won, and Dealer went bust)
+
+Dealer score: 22
+Three of Hearts
+Two of Clubs
+Ace of Spades
+Six of Clubs
+
+Jeremy score: 15
+Four of Hearts
+Two of Hearts
+Five of Hearts
+Four of Diamonds
+
+Jeremy won: $500
+$1,500 remaining
+
+******************************
+
+
+
+
+
+******************************
+Game stats
+******************************
+
+Number of games 1
+
+Dealer won: 0
+
+Jeremy won: 1
+
+Draws: 0
+
+******************************
+*******
+******
+*****
+****
+***
+**
+*
+Mukas Code Corporation
