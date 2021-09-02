@@ -531,7 +531,6 @@ def play_again_check():
             stats_file.write("\n***")
             stats_file.write("\n**")
             stats_file.write("\n*")
-            stats_file.write("\nMukas Code Corporation")
             stats_file.close()
             # read_the_stats()
             email_the_stats()
@@ -543,11 +542,11 @@ def email_the_stats():
     with open('stats.txt', 'r') as gamefile:
         gameinfo = gamefile.read().rstrip('\n')
 
-    fromx = 'Mukas Code Corporation'
+    fromx = 'Jeremy'
     sender_email  = input("Type sender email address and press enter:  ")
     to  = input("Type recipient email address and press enter:  ")
     msg = MIMEText(gameinfo)
-    msg['Subject'] = 'Game stats, Mukas Black Jack'
+    msg['Subject'] = 'Game stats, Black Jack'
     msg['From'] = fromx
     msg['To'] = to
 
@@ -628,7 +627,7 @@ print(f"\nWelcome {currentplayer}")
 # stats_file = open(f"{currentplayer}_stats.txt", "a+")
 stats_file = open("stats.txt", "x")
 stats_file = open("stats.txt", "a+")
-stats_file.write(f"Mukas Black Jack, stats for {currentplayer}\n")
+stats_file.write(f"Black Jack, stats for {currentplayer}\n")
 stats_file.write(f"\n{gamedate}\n")
 stats_file.write(f"{gametime}\n")
 stats_file.close()

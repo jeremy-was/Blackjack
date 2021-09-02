@@ -1,4 +1,4 @@
-Mukas Black Jack, stats for Jeremy
+Black Jack, stats for Jeremy
 
 September 02, 2021
 14:31:57
@@ -46,4 +46,3 @@ Draws: 0
 ***
 **
 *
-Mukas Code Corporation
