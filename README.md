@@ -1,4 +1,4 @@
-# blackjack
+# Blackjack
  text based - blackjack card game
  
  User v computer.
